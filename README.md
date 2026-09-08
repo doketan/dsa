@@ -1,5 +1,3 @@
-# dsa
-
 # DSA Patterns & Problem-Solving Framework
 
 ## A Comprehensive Guide to Mastering Technical Interviews
@@ -136,3 +134,81 @@ Let's use our framework to solve the classic problem **"20. Valid Parentheses"**
 - Push opening parentheses onto the stack, and when you see a closing one, pop the stack to check if it's the correct matching type.
 
 ### Step 4: Try a Small Example
+
+Input: "{[()]}"
+1. `{` -> push
+2. `[` -> push
+3. `(` -> push
+4. `)` -> pop `(` matches `)` -> valid
+5. `]` -> pop `[` matches `]` -> valid
+6. `}` -> pop `{` matches `}` -> valid
+
+After processing, the stack is empty → string is valid.
+
+### Step 5: Map to Known Problems
+This is a classic use of a stack. The algorithm:
+- Iterate through each character `c` in the string.
+- If `c` is an opening bracket, push it onto the stack.
+- If `c` is a closing bracket, check the top of the stack. If empty or doesn't match, return `false`.
+- After processing all characters, return `true` if stack is empty.
+
+### Java Implementation
+
+```java
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.Map;
+
+class Solution {
+    public boolean isValid(String s) {
+        Deque<Character> stack = new ArrayDeque<>();
+        Map<Character, Character> matchingBrackets = new HashMap<>();
+        matchingBrackets.put(')', '(');
+        matchingBrackets.put('}', '{');
+        matchingBrackets.put(']', '[');
+
+        for (char c : s.toCharArray()) {
+            if (matchingBrackets.containsKey(c)) {
+                if (stack.isEmpty() || stack.pop() != matchingBrackets.get(c)) {
+                    return false;
+                }
+            } else {
+                stack.push(c);
+            }
+        }
+        return stack.isEmpty();
+    }
+}
+
+Time Complexity Decision Tree
+n ≤ 10-15     → Brute force / Backtracking (2^n, n!)
+n ≤ 20        → Bitmask DP (2^n)
+n ≤ 1000      → O(n²) DP
+n ≤ 10⁵       → O(n) or O(n log n)
+n ≤ 10⁶       → O(n) only
+
+
+Pattern Selection Flow
+Input Type:
+├── Array/String
+│   ├── Sorted → Binary Search or Two Pointers
+│   ├── Contiguous subarray → Sliding Window
+│   ├── Pairs/Triplets → Two Pointers (if sorted) or HashMap
+│   ├── All combinations → Backtracking
+│   └── Optimal value → DP or Greedy
+├── Tree/Graph
+│   ├── Shortest path → BFS (unweighted) or Dijkstra (weighted)
+│   ├── Connectivity → DFS or Union-Find
+│   ├── Level order → BFS
+│   ├── Dependencies → Topological Sort
+│   └── All nodes calculation → Rerooting DP
+├── Linked List
+│   ├── Cycle detection → Fast & Slow Pointers
+│   ├── Merge sorted lists → Two Pointers
+│   └── Reverse / Reorder → Recursion or Iterative
+└── String
+    ├── Substring condition → Sliding Window
+    ├── Parentheses → Stack
+    ├── Prefix operations → Trie
+    └── Multiple pattern matching → Bucket Queue or Suffix Array
