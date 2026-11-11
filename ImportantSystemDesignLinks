@@ -1,0 +1,54 @@
+Discord replaced 177 Cassandra database nodes with 72 ScyllaDB nodes. Uber was handling millions of queries per second using Cassandra.
+
+Ask most engineers why Discord moved away from Cassandra while Uber kept scaling it, and they'll say "Cassandra doesn't scale". That's not it.
+
+Discord had trillions of messages stored across 177 nodes. When thousands of users opened the same popular channel, their requests could overwhelm the same database partition.
+
+So Discord built an intermediate service in Rust that combined identical requests into a single database query.
+
+Instead of repeatedly fetching the same row for thousands of users, the service could fetch it once and share the result.
+
+They also migrated to ScyllaDB, reducing the cluster from 177 nodes to 72. Historical message read latency at p99 dropped from 40-125 ms to around 15 ms.
+
+Uber took a different approach. Its engineers invested in automated repairs, detecting inefficient queries, and tooling to manage Cassandra at a much larger scale.
+
+You learn these trade-offs from engineers who actually operated these systems, not simplified interview examples.
+
+Here are 8 of their talks. All free:
+
+1. How Discord migrated trillions of messages by Bo Ingram, Discord (29 min)
+Hot partitions, request coalescing, Rust, and how they migrated without taking messaging offline.
+youtu.be/S2xmFOAUhsk
+
+2. How Uber uses Cassandra at scale by Jaydeepkumar Chovatia and Gopal Mor (33 min)
+Millions of queries per second, automated repairs, and managing thousands of database nodes.
+youtu.be/jMQZ1CLGPlM
+
+3. Sharding from node-scale to planet-scale by Adam McKaig, Stripe (37 min)
+When one database is no longer enough, and how to split data without making everything harder.
+youtu.be/pVXSLTGzNLw
+
+4. How Netflix handles sudden traffic spikes, AWS re (49 min)
+Why autoscaling alone isn't enough when millions of users arrive at once.
+youtu.be/TkFyZyxFRBM
+
+5. Shopify's architecture for the world's biggest flash sales by Bart de Water (49 min)
+How Shopify isolates stores so one massive sale doesn't slow down everyone else.
+youtu.be/MV5Kdwzwcag
+
+6. Delivering millions of notifications during the Super Bowl by Duolingo engineers (48 min)
+How they sent 4 million notifications within seconds without overwhelming their backend.
+youtu.be/J_sGZnAJhbw
+
+7. Scaling Kafka to 1 trillion messages by Cloudflare engineers (32 min)
+What they learned from operating Kafka across multiple data centres.
+youtu.be/_booBjCB7rU
+
+8. Sleeping at scale with Rust, Kafka and ScyllaDB by OneSignal engineers (49 min)
+How they built a system capable of handling 10,000 timers per second per node.
+youtu.be/6qNvZd0bmWk
+
+My recommendation would be to watch #1 and #2 first.
+
+System design courses teach you how systems might scale.
+These talks show you how engineers actually made them scale.
